@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Taste of Food — Explore Flavors</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#ff6b6b;
+      --accent-2:#ffd166;
+      --muted:rgba(255,255,255,0.7);
+      --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.02);
+      --radius: 14px;
+      --glass-border: rgba(255,255,255,0.06);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071024 0%, #071826 55%);color:#fff}
+
+    .nav{backdrop-filter: blur(6px);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;padding:14px 28px;position:sticky;top:0;z-index:60}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:0.4px}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#071024;font-weight:800}
+    .nav-links{display:flex;gap:14px;align-items:center}
+    .btn{padding:8px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#ff9671);border:none;color:#071024;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(255,107,107,0.12);transition:transform .18s ease}
+    .btn:active{transform:translateY(1px)}
+
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;padding:44px 28px;align-items:center}
+    .hero-left h1{font-size:clamp(28px,4.6vw,48px);margin:0 0 12px}
+    .sub{color:var(--muted);max-width:56ch;line-height:1.5}
+
+    .search{display:flex;gap:12px;margin-top:18px}
+    .search input{flex:1;padding:12px 14px;border-radius:12px;border:0;background:var(--glass);outline:none;color:inherit}
+    .chips{display:flex;gap:8px;margin-top:14px}
+    .chip{padding:8px 12px;border-radius:999px;background:transparent;border:1px solid var(--glass-border);cursor:pointer;transition:all .18s}
+    .chip:hover{transform:translateY(-3px);border-color:var(--accent-2)}
+
+    .hero-right{background:linear-gradient(160deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:18px;border:1px solid var(--glass-border);box-shadow: 0 10px 30px rgba(2,6,23,0.7)}
+    .hero-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .tile{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(180deg,var(--glass),var(--glass-2));border:1px solid rgba(255,255,255,0.02)}
+    .tile img{width:56px;height:56px;border-radius:10px;object-fit:cover}
+    .tile strong{display:block}
+    .tile small{color:var(--muted)}
+
+    .container{padding:28px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;margin:18px 0}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:14px;border:1px solid var(--glass-border);transition:transform .18s ease, box-shadow .18s ease;cursor:pointer}
+    .card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(2,6,23,0.6)}
+    .food-img{width:100%;height:160px;border-radius:10px;object-fit:cover;display:block}
+    .meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+    .tags{display:flex;gap:8px}
+    .tag{font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.02)}
+
+    .filters{display:flex;gap:12px;align-items:center}
+    .filter-select{padding:10px 12px;border-radius:10px;background:transparent;border:1px solid var(--glass-border);min-width:140px}
+
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85));z-index:120}
+    .modal.show{display:flex}
+    .modal-card{width:min(920px,96%);background:linear-gradient(180deg,#071b2a,#051019);padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,0.04);display:grid;grid-template-columns:420px 1fr;gap:18px}
+    .modal-card img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+    .modal-close{position:absolute;right:24px;top:24px;padding:8px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-border);cursor:pointer}
+
+    @media (max-width:1000px){.hero{grid-template-columns:1fr;}.grid{grid-template-columns:repeat(2,1fr)}.hero-right{order:2}}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}.nav{padding:12px}.hero{padding:20px}}
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="brand">
+      <div class="logo">TF</div>
+      <div>
+        <div>Taste of Food</div>
+        <small class="muted">Explore Flavors Worldwide</small>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-left">
+      <h1>Welcome to Taste of Food</h1>
+      <p class="sub">Your one-stop destination for global cuisines — Italian, Indian, Japanese, Mexican, and more.</p>
+    </div>
+    <aside class="hero-right">
+      <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1000&q=80" alt="Delicious Food" style="width:100%;height:100%;border-radius:16px;object-fit:cover;"/>
+    </aside>
+  </section>
+
+  <section class="container">
+    <div class="section-title">
+      <h2>Italian Cuisine</h2>
+    </div>
+    <img src="https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?auto=format&fit=crop&w=1000&q=80" alt="Italian food" class="food-img"/>
+  </section>
+
+  <section class="container">
+    <div class="section-title">
+      <h2>Indian Cuisine</h2>
+    </div>
+    <img src="https://images.unsplash.com/photo-1617196034977-937e8f9e2d6a?auto=format&fit=crop&w=1000&q=80" alt="Indian food" class="food-img"/>
+  </section>
+
+  <section class="container">
+    <div class="section-title">
+      <h2>Japanese Cuisine</h2>
+    </div>
+    <img src="https://images.unsplash.com/photo-1601315481807-3e82e7f02fa0?auto=format&fit=crop&w=1000&q=80" alt="Japanese food" class="food-img"/>
+  </section>
+
+  <section class="container">
+    <div class="section-title">
+      <h2>Mexican Cuisine</h2>
+    </div>
+    <img src="https://images.unsplash.com/photo-1608032816361-9934e94af718?auto=format&fit=crop&w=1000&q=80" alt="Mexican food" class="food-img"/>
+  </section>
+
+  <section class="container">
+    <div class="section-title">
+      <h2>Desserts</h2>
+    </div>
+    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1000&q=80" alt="Desserts" class="food-img"/>
+  </section>
+</body>
+</html>
